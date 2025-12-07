@@ -173,6 +173,8 @@ def shibie():
                 if not text or re.match(r'^[，。、？‘’“”；：（｛｝【】）:;"\'\s \d`!@#$%^&*()_+=.,?/\\-]*$', text) or len(
                         text) <= 1:
                     continue
+                if cfg.cc is not None:
+                    text=cfg.cc.convert(text)
                 if data_type == 'json':
                     # 原语言字幕
                     raw_subtitles.append(
@@ -207,7 +209,7 @@ def process():
     data_type = request.form.get("data_type")
     wav_file = os.path.join(cfg.TMP_DIR, wav_name)
     if not os.path.exists(wav_file):
-        return jsonify({"code": 1, "msg": f"{wav_file} {cfg.langlist['lang5']}"})
+        return jsonify({"code": 1, "msg": f"{wav_file} {cfg.transobj['lang5']}"})
 
     key=f'{wav_name}{model}{language}{data_type}'
     #重设结果为none

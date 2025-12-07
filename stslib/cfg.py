@@ -4,6 +4,7 @@ import sys
 import torch
 import re
 ROOT_DIR = os.getcwd()
+from opencc import OpenCC
 
 def parse_ini(file=os.path.join(ROOT_DIR,'set.ini')):
     
@@ -22,8 +23,8 @@ def parse_ini(file=os.path.join(ROOT_DIR,'set.ini')):
         "vad":True,
         "temperature":0,
         "condition_on_previous_text":False,
+        'opencc': 't2s',
         "initial_prompt_zh":"转录为中文简体。"
-
     }
     if not os.path.exists(file):
         return sets
@@ -44,9 +45,17 @@ def parse_ini(file=os.path.join(ROOT_DIR,'set.ini')):
                 sets[line[0]]=line[1].split(',')
             elif line[1]:
                 sets[line[0]]=str(line[1]).lower()
+    if sets['opencc'] == 's2t':
+        sets["initial_prompt_zh"] = "转录为中文繁体。"
     return sets
 
 sets=parse_ini()
+
+trans=sets.get('opencc')
+if trans in ('s2t','t2s'):
+    cc = OpenCC(trans)
+else :
+    cc = None
 
 web_address=sets.get('web_address')
 LANG=sets.get('lang','zh')

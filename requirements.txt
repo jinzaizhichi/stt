@@ -4,3 +4,4 @@ requests
 gevent
 faster-whisper
 fsspec
+opencc-python-reimplemented
